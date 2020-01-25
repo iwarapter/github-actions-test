@@ -36,6 +36,9 @@ jobs:
         run: echo "##[set-output name=body;]$(grep -m 2 -A100000 "##" CHANGELOG.md | grep -v '##')"
         id: changelog
 
+      - name: Log release changelog
+        run: echo "${{ steps.changelog.outputs.body }}"
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

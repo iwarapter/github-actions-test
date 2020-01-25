@@ -23,6 +23,13 @@ jobs:
 
     - name: Build
       run: make build
+    
+    - name: Get release changelog
+      run: echo "##[set-output name=body;]$(grep -m 2 -A100000 "##" CHANGELOG.md | grep -v '##')"
+      id: changelog
+
+    - name: Log release changelog
+      run: echo "${{ steps.changelog.outputs.body }}"
 
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
