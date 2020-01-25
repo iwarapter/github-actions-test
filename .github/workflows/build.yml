@@ -21,11 +21,12 @@ jobs:
         go mod vendor
         go mod verify
 
-    - name: Build
-      run: make build
+    - name: Test
+      run: make test-and-report
     
     - name: Get release changelog
-      run: 
+      shell: bash
+      run: |
         description=$(grep -m 2 -A100000 "##" CHANGELOG.md | grep -v '##')
         echo $description
         description="${description//'%'/'%25'}"
