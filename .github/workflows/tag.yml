@@ -32,6 +32,10 @@ jobs:
       - name: Build release
         run: VERSION=${{ github.ref }} make release
 
+      - name: Get release changelog
+        run: echo "##[set-output name=body;]$(grep -m 2 -A100000 "##" CHANGELOG.md | grep -v '##')"
+        id: changelog
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -40,10 +44,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+          body: ${{ steps.changelog.body }}
           draft: false
           prerelease: false
 
