@@ -25,7 +25,6 @@ jobs:
       run: make test-and-report
     
     - name: Get release changelog
-      shell: bash
       run: |
         description=$(grep -m 2 -A100000 "##" CHANGELOG.md | grep -v '##')
         echo $description
