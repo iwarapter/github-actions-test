@@ -33,8 +33,8 @@ jobs:
         run: VERSION=${{ github.ref }} make release
 
       - name: Get release changelog
-        run: 
-          description=$(grep -m 2 -A100000 "##" CHANGELOG.md | grep -v '##')
+        run: |
+          description=$(grep -m 2 -B10000 "##" CHANGELOG.md | grep -v '##')
           echo $description
           description="${description//'%'/'%25'}"
           description="${description//$'\n'/'%0A'}"
