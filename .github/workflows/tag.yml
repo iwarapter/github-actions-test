@@ -33,11 +33,14 @@ jobs:
         run: VERSION=${{ github.ref }} make release
 
       - name: Get release changelog
-        run: echo "##[set-output name=body;]$(grep -m 2 -A100000 "##" CHANGELOG.md | grep -v '##')"
+        run: 
+          description=$(grep -m 2 -A100000 "##" CHANGELOG.md | grep -v '##')
+          echo $description
+          description="${description//'%'/'%25'}"
+          description="${description//$'\n'/'%0A'}"
+          description="${description//$'\r'/'%0D'}" 
+          echo "::set-output name=description::$description" 
         id: changelog
-
-      - name: Log release changelog
-        run: echo "${{ steps.changelog.outputs.body }}"
 
       - name: Create Release
         id: create_release
@@ -47,7 +50,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: ${{ steps.changelog.outputs.body }}
+          body: ${{ steps.changelog.outputs.description }}
           draft: false
           prerelease: false
 
