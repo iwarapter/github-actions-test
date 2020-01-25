@@ -26,9 +26,12 @@ jobs:
     
     - name: Get release changelog
       run: |
-        grep -m 2 -B10000 "##" CHANGELOG.md | grep -v '##' > desc.log
-        cat desc.log
-        echo "::set-output name=description::$(cat desc.log)" 
+        description=$(grep -m 2 -B10000 "##" CHANGELOG.md | grep -v '##')
+        echo $description
+        description="${description//'%'/'%25'}"
+        description="${description//$'\n'/'%0A'}"
+        description="${description//$'\r'/'%0D'}" 
+        echo "::set-output name=description::$description" 
       id: changelog
 
     - name: Log release changelog
